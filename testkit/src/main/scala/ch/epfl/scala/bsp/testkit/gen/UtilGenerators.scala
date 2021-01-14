@@ -2,8 +2,9 @@ package ch.epfl.scala.bsp.testkit.gen
 
 import java.net.URI
 import java.nio.file.{Path, Paths}
-
 import org.scalacheck.Gen
+
+import java.io.File
 
 trait UtilGenerators {
 
@@ -23,7 +24,7 @@ trait UtilGenerators {
   } yield {
     val combined = segments.foldLeft("") { (combined, seg) =>
       if (combined.length + seg.length + 1 > 100) combined
-      else combined + "/" + seg
+      else combined + File.pathSeparator + seg
     }
     Paths.get(combined).toAbsolutePath
   }
@@ -35,7 +36,7 @@ trait UtilGenerators {
   lazy val genFileUriString: Gen[String] = for {
     segmentCount <- Gen.choose(1, 10)
     segments <- Gen.listOfN(segmentCount, Gen.identifier)
-  } yield "file:///" + segments.mkString("/") // TODO windows paths
+  } yield "file://" + File.listRoots()(0) + segments.mkString(File.pathSeparator) // TODO windows paths
 
   /** Fully qualified class name. */
   lazy val genFQN: Gen[String] = for {
