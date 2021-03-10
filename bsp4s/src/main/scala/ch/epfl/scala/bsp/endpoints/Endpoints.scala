@@ -56,6 +56,11 @@ trait BuildTarget {
     extends Endpoint[JavacOptionsParams, JavacOptionsResult](
       "buildTarget/javacOptions"
     )
+  // C++ specific endpoints
+  object cppOptions
+    extends Endpoint[CppOptionsParams, CppOptionsResult](
+      "buildTarget/cppOptions"
+    )
 }
 
 object Workspace extends Workspace
