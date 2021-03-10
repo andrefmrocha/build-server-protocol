@@ -64,7 +64,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
   val targetId1 = new BuildTargetIdentifier(baseUri.resolve("target1").toString)
   val targetId2 = new BuildTargetIdentifier(baseUri.resolve("target2").toString)
   val targetId3 = new BuildTargetIdentifier(baseUri.resolve("target3").toString)
-  val targetId4 = new BuildTargetIdentifier(baseUri.resolve("target3").toString)
+  val targetId4 = new BuildTargetIdentifier(baseUri.resolve("target4").toString)
   val target1 = new BuildTarget(
     targetId1,
     List(BuildTargetTag.LIBRARY).asJava,
@@ -239,6 +239,8 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       val scalaBuildTarget =
         new ScalaBuildTarget("org.scala-lang", "2.12.7", "2.12", ScalaPlatform.JVM, scalaJars)
       scalaBuildTarget.setJvmBuildTarget(jvmBuildTarget)
+      val cppBuildTarget =
+        new CppBuildTarget("C++11", "gcc", "/usr/bin/gcc", "/usr/bin/g++")
 
       target1.setDisplayName("target 1")
       target1.setBaseDirectory(targetId1.getUri)
@@ -258,7 +260,7 @@ class HappyMockServer(base: File) extends AbstractMockServer {
       target4.setDisplayName("target 4")
       target4.setBaseDirectory(targetId4.getUri)
       target4.setDataKind(BuildTargetDataKind.CPP)
-      target4.setData(BuildTargetDataKind.CPP)//TODO: Add cpp build target
+      target4.setData(cppBuildTarget)
 
       val result = new WorkspaceBuildTargetsResult(compileTargets.values.toList.asJava)
       Right(result)

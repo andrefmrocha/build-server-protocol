@@ -47,13 +47,18 @@ class HappyMockSuite extends FunSuite {
       gson.fromJson[ScalaBuildTarget](buildTarget.getData.asInstanceOf[JsonElement],
         classOf[ScalaBuildTarget])
     }
+
+    def asCppBuildTarget: CppBuildTarget = {
+      gson.fromJson[CppBuildTarget](buildTarget.getData.asInstanceOf[JsonElement],
+        classOf[CppBuildTarget])
+    }
   }
 
   def assertWorkspaceBuildTargets(server: MockBuildServer): Unit = {
     // workspace/buildTargets
     val buildTargets = server.workspaceBuildTargets().get().getTargets.asScala
-    assert(buildTargets.length == 3)
-    val scalaBuildTargets = buildTargets.map(_.asScalaBuildTarget)
+    assert(buildTargets.length == 4)
+    val scalaBuildTargets = buildTargets.slice(0, 3).map(_.asScalaBuildTarget)
     scalaBuildTargets.foreach { scalaBuildTarget =>
       assert(scalaBuildTarget != null)
       assert(scalaBuildTarget.getScalaVersion == "2.12.7")
@@ -63,6 +68,12 @@ class HappyMockSuite extends FunSuite {
       }
       assert(scalaBuildTarget.getScalaBinaryVersion == "2.12")
     }
+
+    val cppBuildTarget = buildTargets.last.asCppBuildTarget
+    assert(cppBuildTarget.getVersion == "C++11")
+    assert(cppBuildTarget.getCCompiler == "/usr/bin/gcc")
+    assert(cppBuildTarget.getCppCompiler == "/usr/bin/g++")
+
   }
 
   def getBuildTargetIds(server: MockBuildServer): util.List[BuildTargetIdentifier] =
